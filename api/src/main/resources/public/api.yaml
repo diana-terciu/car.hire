@@ -8,12 +8,19 @@ info:
 servers:
   - url: http://localhost:{port}
     description: local environment
+    
     variables:
       port:
         default: '8080'
+
 tags:
   - name: sample
     description: Sample resource endpoint
+    
+security:
+  - oAuth:
+      - write
+      - read
 paths:
   /sample:
     get:
@@ -73,12 +80,8 @@ paths:
             schema:
              $ref: '#/components/schemas/UserDTO'
       responses:
-        '200':
-          description: Created user
-          content:
-            application/json:
-              schema: 
-                 $ref: '#/components/schemas/UserDTO'
+        '201':
+          $ref: '#/components/responses/Created'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -93,7 +96,7 @@ paths:
           required: true
           schema:
             type: integer
-            format: int64
+            format: int32
    get:
      summary: Returns a user by ID.
      operationId: getUserById
@@ -119,18 +122,28 @@ paths:
             schema:
                 $ref: '#/components/schemas/UserDTO'
      responses:
-        '204':
-          description: Updated the user partially
+        '200':
+          description: success
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
    delete:
     summary: Delete user by id
     operationId: deleteUserById
     responses:
-       '204':
-          description: The user was  deleted
-       '404':
-          description: User with the specified ID was not found
-       '401':
-          description: Unauthorized
+        '200':
+          description: success
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
   /cars:
     post:
       tags:
@@ -146,12 +159,8 @@ paths:
             schema:
              $ref: '#/components/schemas/CarDTO'
       responses:
-        '200':
-          description: Created car
-          content:
-            application/json:
-              schema: 
-                 $ref: '#/components/schemas/CarDTO'
+        '201':
+         $ref: '#/components/responses/Created'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -247,12 +256,8 @@ paths:
             schema:
              $ref: '#/components/schemas/RentalDTO'
       responses:
-        '200':
-          description: Created rental
-          content:
-            application/json:
-              schema: 
-                 $ref: '#/components/schemas/RentalDTO'
+        '201': 
+          $ref: '#/components/responses/Created'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -299,6 +304,14 @@ paths:
           $ref: '#/components/responses/ServerError'
 components:
   responses:
+    Created:
+      description: the id of the created entity
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreatedDTO'
+    NotFound:
+      description: the results are either empty or couldn't be found        
     Unauthorized:
       description: unauthorized
     BadRequest:
@@ -332,6 +345,13 @@ components:
           type: string
         message:
           type: string
+    CreatedDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: the id of the created entity
     SampleDTO:
       type: object
       properties:
@@ -371,9 +391,7 @@ components:
           example: User username
           description: username of the user
         countryOfResidence:
-          type: string
-          example: User country
-          description: country of the user
+          $ref: '#/components/schemas/CountryDTO'
         status:
           type: string
           example: User status
@@ -381,6 +399,21 @@ components:
           enum:
            - ACTIVE
            - DELETED
+    CountryDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: country id
+        name:
+          type: string
+          example: Romania
+          description: the name of the country
+        isoCode:
+          type: string
+          example: ROU
+          description: the iso code of the country
     CarDTO:
       type: object
       properties:
@@ -444,3 +477,13 @@ components:
           enum:
            - ACTIVE
            - CANCELLED
+  securitySchemes:
+    oAuth:
+      type: oauth2
+      description: This API uses OAuth2 with the password flow
+      flows:
+        password:
+          tokenUrl: /oauth/token
+          scopes:
+            read: get information from the API
+            write: use the API to make changes to the supporting data model       

@@ -10,7 +10,9 @@ import ro.agilehub.javacourse.car.hire.user.entity.UserEntity;
 @Repository
 public interface UserEntityRepository extends JpaRepository<UserEntity, Integer> {
 
-	Optional<UserEntity> findById(Long id);
+	UserEntity findById(Long id);
 
 	void deleteById(Long id);
+
+	Optional<UserEntity> findByUsernameIgnoreCase(String username);
 }

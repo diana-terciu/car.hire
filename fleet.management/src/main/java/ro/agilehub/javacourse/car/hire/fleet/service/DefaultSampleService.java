@@ -10,16 +10,24 @@ import java.util.List;
 @Service
 public class DefaultSampleService implements SampleService {
 
-    @Autowired
-    private SampleEntityRepository sampleEntityRepository;
+	@Override
+	public List<SampleEntity> findAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @Override
-    public List<SampleEntity> findAll() {
-        return sampleEntityRepository.findAll();
-    }
-
-    @Override
-    public SampleEntity findById(Integer id) {
-        return sampleEntityRepository.findById(id).orElseThrow();
-    }
+	@Override
+	public SampleEntity findById(Integer id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	/*
+	 * @Autowired private SampleEntityRepository sampleEntityRepository;
+	 * 
+	 * @Override public List<SampleEntity> findAll() { return
+	 * sampleEntityRepository.findAll(); }
+	 * 
+	 * @Override public SampleEntity findById(Integer id) { return
+	 * sampleEntityRepository.findById(id).orElseThrow(); }
+	 */
 }

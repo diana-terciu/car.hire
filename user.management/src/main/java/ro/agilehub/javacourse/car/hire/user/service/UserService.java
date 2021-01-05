@@ -3,15 +3,20 @@ package ro.agilehub.javacourse.car.hire.user.service;
 import java.util.List;
 import java.util.Optional;
 
-import ro.agilehub.javacourse.car.hire.user.entity.UserEntity;
+import ro.agilehub.javacourse.car.hire.api.model.UserDTO;
 
 public interface UserService {
 
-	List<UserEntity> findAll();
+	List<UserDTO> findAll();
 
-	 Optional<UserEntity> findById(Long id);
+	 Optional<UserDTO> findById(Integer id);
 
-	void save(UserEntity user);
+    void deleteUser(Integer id);
 
-	void delete(Long id);
+    UserDTO getByUsername(String username);
+
+	Integer createNewUser(UserDTO example);
+
+	void patchUser(Integer id, UserDTO updateExample);
+
 }

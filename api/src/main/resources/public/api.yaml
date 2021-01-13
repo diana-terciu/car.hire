@@ -145,6 +145,27 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
   /cars:
+    get:
+      tags:
+        - user
+      summary: get all cars
+      description: returns a list Return a list with all the cars without any filtering
+      operationId: getCars
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CarDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+           $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
     post:
       tags:
         - car
@@ -203,7 +224,7 @@ paths:
           required: true
           schema:
             type: integer
-            format: int64
+            format: int32
    get:
      summary: Returns a car by ID.
      operationId: getCarById
@@ -230,7 +251,7 @@ paths:
                 $ref: '#/components/schemas/CarDTO'
      responses:
         '204':
-          description: Updated the car partially
+          description: Updated the car partially    
    delete:
     summary: Delete car by id
     operationId: deleteCarById
